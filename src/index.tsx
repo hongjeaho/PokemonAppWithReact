@@ -4,12 +4,16 @@ import router from './router'
 import { RecoilRoot } from 'recoil'
 import reportWebVitals from './reportWebVitals'
 import { RouterProvider } from 'react-router-dom'
-
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
+const queryClient = new QueryClient()
+
 root.render(
   <RecoilRoot>
+    <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
+    </QueryClientProvider>
   </RecoilRoot>,
 )
 
