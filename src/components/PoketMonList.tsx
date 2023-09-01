@@ -3,6 +3,7 @@ import styled from '@emotion/styled/macro'
 import React from 'react'
 import { getIndex, getIndexNumber } from '@/utils'
 import useInfitityObserver from '@/hooks/useInfiniteObserver'
+import { useNavigate } from 'react-router-dom'
 
 const getImageUrl = (url: string): string =>{
   const pokemonIndex = getIndex(url)
@@ -12,6 +13,7 @@ const getImageUrl = (url: string): string =>{
 const PoketMonList: React.FC = () => {
   const { isLoading, isError, data: pokmonList, hasNextPage, fetchNextPage } = usePokmonList()
   const {target} = useInfitityObserver( {hasNextPage, fetchNextPage})
+  const navigate = useNavigate();
 
   return (
     <Base>
@@ -23,7 +25,7 @@ const PoketMonList: React.FC = () => {
         <List>
           {pokmonList?.pages.map((pageItme) => {
             return pageItme.data.results.map((pokemon) => (
-              <Item key={pokemon.name}>
+              <Item key={pokemon.name} onClick={() => { navigate(`/detail/${getIndex(pokemon.url)}`) }}>
                 <Image src={getImageUrl(pokemon.url)} />
                 <Name>{pokemon.name}</Name>
                 <Index> {`#${getIndexNumber(getIndex(pokemon.url))}`}</Index>
