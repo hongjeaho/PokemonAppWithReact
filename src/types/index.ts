@@ -5,6 +5,8 @@ export interface SimplePokemonInfo {
 
 export interface ListResponse {
   count: number
+  next:string
+  previous:string
   results: SimplePokemonInfo[]
 }
 
@@ -12,7 +14,7 @@ export interface SpeciesResponse {
   id: number
   name: string
   order: number
-  names: Array<Name>
+  names: Name[]
   color: Color
   flavor_text_entries: FlavorTextEntry[]
   growth_rate: GrowthRate

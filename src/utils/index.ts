@@ -1,4 +1,9 @@
-export const getIndex = (index: string) => index.padStart(3, '0')
+export const getIndex = (url: string): string => {
+  const urlParser = url.split('/')
+  return urlParser[urlParser.length - 2]
+}
+
+export const getIndexNumber = (index: string) => index.padStart(3, '0')
 
 export const mapColorToHex = (color?: string) => {
   switch (color) {

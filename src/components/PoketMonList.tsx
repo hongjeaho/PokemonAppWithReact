@@ -1,13 +1,17 @@
 import { usePokmonList } from '@/hooks/usePoketmon'
 import styled from '@emotion/styled/macro'
 import React from 'react'
-import { getIndex } from '@/utils'
+import { getIndex, getIndexNumber } from '@/utils'
+import useInfitityObserver from '@/hooks/useInfiniteObserver'
 
-const getImageUrl = (pokemonIndex: number): string =>
-  `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonIndex}.png`
+const getImageUrl = (url: string): string =>{
+  const pokemonIndex = getIndex(url)
+  return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonIndex}.png`
+}
 
 const PoketMonList: React.FC = () => {
-  const { isLoading, isError, data: pokmonList } = usePokmonList()
+  const { isLoading, isError, data: pokmonList, hasNextPage, fetchNextPage } = usePokmonList()
+  const {target} = useInfitityObserver( {hasNextPage, fetchNextPage})
 
   return (
     <Base>
@@ -17,17 +21,18 @@ const PoketMonList: React.FC = () => {
         </LoadingWrapper>
       ) : (
         <List>
-          {pokmonList?.data.results.map((itme, index) => (
-            <Item key={itme.name}>
-              <Image src={getImageUrl(index + 1)} />
-              <Name>{itme.name}</Name>
-              <Index>
-                <div id={getIndex(String(index + 1))}></div>
-              </Index>
-            </Item>
-          ))}
+          {pokmonList?.pages.map((pageItme) => {
+            return pageItme.data.results.map((pokemon) => (
+              <Item key={pokemon.name}>
+                <Image src={getImageUrl(pokemon.url)} />
+                <Name>{pokemon.name}</Name>
+                <Index> {`#${getIndexNumber(getIndex(pokemon.url))}`}</Index>
+              </Item>
+            ))
+          })}
         </List>
       )}
+      <div ref={target} />
     </Base>
   )
 }
