@@ -1,5 +1,5 @@
 import { type Color, type Type } from '@/types'
-import { getIndex, mapColorToHex, mapTypeToHex } from '@/utils'
+import { getIndexNumber, mapColorToHex, mapTypeToHex } from '@/utils'
 import styled from '@emotion/styled/macro'
 import React from 'react'
 
@@ -18,7 +18,7 @@ const PokeMonInfo: React.FC<Props> = ({ id, name, types, color }) => {
       </ImageWrapper>
       <InfoWrapper>
         <Name>{name}</Name>
-        <Index>#{getIndex(id)}</Index>
+        <Index>#{getIndexNumber(id)}</Index>
       </InfoWrapper>
       <TypeList>
         {types?.map(({ type }, index) => (
