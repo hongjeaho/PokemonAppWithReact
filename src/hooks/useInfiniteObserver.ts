@@ -1,7 +1,7 @@
 
 import { type InfiniteQueryObserverResult} from "@tanstack/react-query"
-import { useEffect, useRef  } from "react"
-
+import { useEffect  } from "react"
+import {useInView} from 'react-intersection-observer'
 interface Props {
   threshold?: number
   hasNextPage: boolean | undefined
@@ -14,30 +14,18 @@ const useInfitityObserver = ({
   fetchNextPage
 } : Props ) => {
 
-  const target = useRef<HTMLDivElement>(null)
-
-  const observerCallBack: IntersectionObserverCallback = (entries) => {
-    entries.forEach(entry => {
-      if(entry.isIntersecting && (hasNextPage === true)) {
-        void fetchNextPage()
-      }
-    })
-  }
-
+  const {ref, inView} = useInView({threshold})
 
   useEffect(() => {
-    if(target === null || target.current === null) return
+    if(!inView) return
 
-    const observer = new IntersectionObserver(observerCallBack, {threshold})
-    observer.observe(target.current)
-
-    return ()=> { 
-      if(target === null || target.current === null) return
-      observer.unobserve(target.current); }
-  }, [observerCallBack, threshold, hasNextPage, fetchNextPage])
+    if(hasNextPage === true) {
+      void fetchNextPage()
+    }
+  }, [inView, threshold, hasNextPage, fetchNextPage])
 
 
-  return {target}
+  return {target: ref}
 }
 
 export default useInfitityObserver
