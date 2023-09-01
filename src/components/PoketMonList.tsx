@@ -66,7 +66,10 @@ const Item = styled.li`
   }
 `
 
-const Image = styled.img``
+const Image = styled.img`
+  width: 165px;
+  height: 165px;
+`
 
 const Name = styled.p`
   margin: 0;
