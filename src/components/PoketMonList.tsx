@@ -1,27 +1,31 @@
-import { usePokmonList } from '@/hooks/usePoketmon'
+
 import styled from '@emotion/styled/macro'
 import React from 'react'
 import { getIndex, getIndexNumber } from '@/utils'
 import useInfitityObserver from '@/hooks/useInfiniteObserver'
 import { useNavigate } from 'react-router-dom'
+import { type InfiniteData, type InfiniteQueryObserverResult } from '@tanstack/react-query'
+import { type AxiosResponse } from 'axios'
+import { type ListResponse } from '@/types'
 
 const getImageUrl = (url: string): string =>{
   const pokemonIndex = getIndex(url)
   return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonIndex}.png`
 }
 
-const PoketMonList: React.FC = () => {
-  const { isLoading, isError, data: pokmonList, hasNextPage, fetchNextPage } = usePokmonList()
+interface Props {
+  hasNextPage: boolean | undefined
+  pokmonList: InfiniteData<AxiosResponse<ListResponse, Error>> | undefined
+  fetchNextPage: () => Promise<InfiniteQueryObserverResult>
+}
+
+const PoketMonList: React.FC<Props> = ({pokmonList, hasNextPage, fetchNextPage}) => {
+  
   const {target} = useInfitityObserver( {hasNextPage, fetchNextPage})
   const navigate = useNavigate();
 
   return (
     <Base>
-      {isLoading || isError ? (
-        <LoadingWrapper>
-          <Loading src="/assets/loading.gif" />
-        </LoadingWrapper>
-      ) : (
         <List>
           {pokmonList?.pages.map((pageItme) => {
             return pageItme.data.results.map((pokemon) => (
@@ -33,21 +37,12 @@ const PoketMonList: React.FC = () => {
             ))
           })}
         </List>
-      )}
       <div ref={target} />
     </Base>
   )
 }
 
-const LoadingWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: calc(180vh - 180px);
-`
 
-const Loading = styled.img``
 
 const Base = styled.div`
   margin-top: 24px;

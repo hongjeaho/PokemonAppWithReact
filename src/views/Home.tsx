@@ -1,13 +1,23 @@
 import PoketMonList from '@/components/PoketMonList'
 import styled from '@emotion/styled/macro'
 import React from 'react'
+import { usePokmonList } from '@/hooks/usePoketmon'
 
 const Home: React.FC = () => {
+  const { isLoading, data: pokmonList, hasNextPage, fetchNextPage } = usePokmonList()
+
   return (
     <Base>
       <Title>Pokedex</Title>
       <Description>설명 설명...</Description>
-      <PoketMonList />
+      {isLoading ? (
+        <LoadingWrapper>
+          <Loading src="/assets/loading.gif" />
+        </LoadingWrapper>
+      ) : (
+        <PoketMonList pokmonList={pokmonList} hasNextPage={hasNextPage} fetchNextPage={fetchNextPage}/>
+      )}
+      
       <ImageWrapper>
         <Image src="/assets/pocketball.svg" />
       </ImageWrapper>
@@ -19,6 +29,16 @@ const Base = styled.div`
   padding: 12px 18px;
   overflow: hidden;
 `
+
+const LoadingWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: calc(180vh - 180px);
+`
+
+const Loading = styled.img``
 
 const Title = styled.div`
   margin: 0;

@@ -8,6 +8,7 @@ import Stats from '@/components/Stats'
 import Evolution from '@/components/Evolution'
 import { useSpecies } from '@/hooks/useSpecies'
 import { usePokmon } from '@/hooks/usePoketmon'
+import styled from '@emotion/styled'
 
 type Tab = 'A' | 'S' | 'E'
 interface Params {
@@ -19,7 +20,7 @@ const Detail: React.FC = () => {
 
   const [tab, setTab] = useState<Tab>('A')
   const { isLoading, data: speciesResult } = useSpecies(id)
-  const { data: pokemonResult } = usePokmon(id)
+  const { isLoading: isPokemonLoading, data: pokemonResult } = usePokmon(id)
 
   const { name, types, stats, weight, height, baseExp, abilities } = useMemo(
     () => ({
@@ -50,8 +51,10 @@ const Detail: React.FC = () => {
 
   return (
     <>
-      {isLoading ? (
-        <div>Loading....</div>
+      {(isLoading || isPokemonLoading) ? (
+        <LoadingWrapper>
+          <Loading src="/assets/loading.gif" />
+        </LoadingWrapper>
       ) : (
         <>
           <PokeMonInfo id={id} name={name} types={types} color={color} />
@@ -85,5 +88,15 @@ const Detail: React.FC = () => {
     </>
   )
 }
+
+const LoadingWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: calc(180vh - 180px);
+`
+
+const Loading = styled.img``
 
 export default Detail

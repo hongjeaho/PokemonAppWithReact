@@ -100,6 +100,7 @@ const TypeList = styled.div`
 
 const ThumbnaillImageWrapper = styled.div`
   width: 160px;
+  height: 160px;
   margin-inline: auto;
   margin-block: 24px;
 `
