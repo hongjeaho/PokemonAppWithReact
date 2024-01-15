@@ -1,4 +1,5 @@
 const CracoAlias = require('craco-alias')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
 module.exports = {
   plugins: [
@@ -10,4 +11,7 @@ module.exports = {
       },
     },
   ],
+  webpack: {
+    plugins: [new BundleAnalyzerPlugin()],
+  },
 }

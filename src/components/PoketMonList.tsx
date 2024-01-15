@@ -1,17 +1,13 @@
-
 import styled from '@emotion/styled/macro'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { getIndex, getIndexNumber } from '@/utils'
 import useInfitityObserver from '@/hooks/useInfiniteObserver'
 import { useNavigate } from 'react-router-dom'
 import { type InfiniteData, type InfiniteQueryObserverResult } from '@tanstack/react-query'
 import { type AxiosResponse } from 'axios'
 import { type ListResponse } from '@/types'
-
-const getImageUrl = (url: string): string =>{
-  const pokemonIndex = getIndex(url)
-  return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonIndex}.png`
-}
+import getImageUrl from '@/api/getImageUrl'
+import _ from 'lodash'
 
 interface Props {
   hasNextPage: boolean | undefined
@@ -19,30 +15,38 @@ interface Props {
   fetchNextPage: () => Promise<InfiniteQueryObserverResult>
 }
 
-const PoketMonList: React.FC<Props> = ({pokmonList, hasNextPage, fetchNextPage}) => {
-  
-  const {target} = useInfitityObserver( {hasNextPage, fetchNextPage})
-  const navigate = useNavigate();
+const PoketMonList: React.FC<Props> = ({ pokmonList, hasNextPage, fetchNextPage }) => {
+  const { target } = useInfitityObserver({ hasNextPage, fetchNextPage })
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    console.log('##############################')
+    const demp = { name: '홍재호' }
+    console.log(_.cloneDeep(demp))
+  }, [hasNextPage])
 
   return (
     <Base>
-        <List>
-          {pokmonList?.pages.map((pageItme) => {
-            return pageItme.data.results.map((pokemon) => (
-              <Item key={pokemon.name} onClick={() => { navigate(`/detail/${getIndex(pokemon.url)}`) }}>
-                <Image src={getImageUrl(pokemon.url)} />
-                <Name>{pokemon.name}</Name>
-                <Index> {`#${getIndexNumber(getIndex(pokemon.url))}`}</Index>
-              </Item>
-            ))
-          })}
-        </List>
+      <List>
+        {pokmonList?.pages.map(pageItme => {
+          return pageItme.data.results.map(pokemon => (
+            <Item
+              key={pokemon.name}
+              onClick={() => {
+                navigate(`/detail/${getIndex(pokemon.url)}`)
+              }}
+            >
+              <Image src={getImageUrl(pokemon.url)} />
+              <Name>{pokemon.name}</Name>
+              <Index> {`#${getIndexNumber(getIndex(pokemon.url))}`}</Index>
+            </Item>
+          ))
+        })}
+      </List>
       <div ref={target} />
     </Base>
   )
 }
-
-
 
 const Base = styled.div`
   margin-top: 24px;

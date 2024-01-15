@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { lazy } from 'react'
 import { createBrowserRouter, type RouteObject } from 'react-router-dom'
 import BaseLayout from '@/components/layout/BaseLayout'
-import Home from '@/views/Home'
-import Detail from '@/views/Detail'
+
+const Home = lazy(() => import('@/views/Home'))
+const Detail = lazy(() => import('@/views/Detail'))
 
 const router: RouteObject[] = [
   {
